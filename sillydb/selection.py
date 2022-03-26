@@ -42,7 +42,9 @@ class Selection:
 
     def sort_by(self, attribute):
         if attribute.startswith('-'):
-            result = sorted(self.content, key=lambda x: getattr(x, attribute[1:]), reverse=True)
+            result = sorted(self.content, key=lambda x: getattr(
+                x, attribute[1:]), reverse=True)
         else:
-            result = sorted(self.content, key=lambda x: getattr(x, attribute), reverse=False)
+            result = sorted(self.content, key=lambda x: getattr(
+                x, attribute), reverse=False)
         return result

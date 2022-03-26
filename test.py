@@ -3,6 +3,7 @@
 
 
 from sillydb.db import ModelTable, ModelDB
+from sillydb.table import ModelField
 
 
 
@@ -11,28 +12,29 @@ db = ModelDB()
 
 persons = ModelTable(
     fields=[
-        "name",
-        "age",
+        ModelField("name", str),
+        ModelField("age", int),
         ],
 )
 
 cats = ModelTable(
     fields=[
-        "name",
+        ModelField("name", str),
         ],
 )
 
 
 db.add_tables([persons, cats])
 
-persons.create("Vincent", "45")
-persons.create("Vic", "35")
-persons.create("Gordon", "52")
-persons.create("Micheline", "23")
-persons.create("Jayna", "32")
-persons.create("Chloê", "19")
-persons.create("Joe", "12")
-persons.create(str(), int())
+persons.create("Vincent", 45)
+persons.create("Vic", 35)
+persons.create("Gordon", 52)
+persons.create("Micheline", 23)
+persons.create("Jayna", 32)
+persons.create("Chloê", 19)
+persons.create("Joe", 12)
+persons.create(age=21, name="Zoé")
+persons.create()
 liste_persons = persons.all()
 
 
@@ -69,4 +71,4 @@ print(f"those on both: {both}")
 print(f"len(both): {len(both)}")
 print(f"list(both): {list(both)}")
 
-print(f"everyone sorted : {everyone.sort_by('-name')}")
+print(f"everyone sorted : {everyone.sort_by('age')}")

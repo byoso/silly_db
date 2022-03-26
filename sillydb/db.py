@@ -23,3 +23,9 @@ class ModelDB:
         for attr in self.__dict__:
             attrs_show += f"{attr}: {getattr(self, attr)}, "
         return f"<SillyDB {attrs_show}>"
+
+    def load(self):
+        pass
+
+    def save(self):
+        pass
