@@ -2,6 +2,7 @@ from sillydb.item import ModelItem
 from sillydb.selection import Selection
 from sillydb.fields import ModelField
 
+
 class ModelTable:
 
     def __init__(
