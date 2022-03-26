@@ -1,0 +1,4 @@
+*.pyc
+ sillydb/__pycache__/
+env/
+.env/

@@ -33,10 +33,13 @@ class ModelTable:
         item = self.model_item()
         item.id = self.base_id
         self.base_id += 1
-        for arg in args:
-            index = args.index(arg)
-            setattr(item, self.fields[index], arg)
-        for key, value in kwargs:
+        for field in self.fields:
+            index = self.fields.index(field)
+            if len(args) > index:
+                setattr(item, self.fields[index], args[index])
+            else:
+                setattr(item, self.fields[index], None)
+        for key, value in kwargs.items():
             setattr(item, key, value)
         self.items.append(item)
 
@@ -89,3 +92,8 @@ class ModelDB:
         for attr in self.__dict__:
             attrs_show += f"{attr}: {getattr(self, attr)}, "
         return f"<SillyDB {attrs_show}>"
+
+
+class Selection:
+    def __init__(self):
+        self.content = []

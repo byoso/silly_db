@@ -26,7 +26,8 @@ persons.create("Gordon", "52")
 persons.create("Micheline", "23")
 persons.create("Jayna", "38")
 persons.create("Chloê", "19")
-
+persons.create("Joe",)
+persons.create(age="77")
 liste_persons = persons.all()
 print(liste_persons)
 
