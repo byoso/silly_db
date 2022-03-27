@@ -1,6 +1,7 @@
 
 class Selection:
     def __init__(self, *args):
+        """args are a list of items or a Selection"""
         self.content = set(*args)
 
     def __repr__(self):
@@ -14,7 +15,7 @@ class Selection:
         result = filter(func, self.content)
         return Selection(result)
 
-    def id_get(self, id):
+    def get(self, id):  # TODO : get it better
         items = list(filter(lambda x: x.id == id, self.content))
         if len(items) > 0:
             return items[0]
@@ -41,6 +42,7 @@ class Selection:
         return iter(self.content)
 
     def sort_by(self, attribute):
+        """Sort by attribute, reverse if '-' before attribute."""
         if attribute.startswith('-'):
             result = sorted(self.content, key=lambda x: getattr(
                 x, attribute[1:]), reverse=True)

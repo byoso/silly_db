@@ -1,25 +1,26 @@
-from sillydb.item import ModelItem
+from sillydb.item import Item
 from sillydb.selection import Selection
-from sillydb.fields import ModelField
+from sillydb.fields import Field
+from sillydb.helpers import EmptyClass
 
 
 class ModelTable:
 
     def __init__(
-        self, base_id=1, fields=[], model_item=ModelItem,
-            model_field=ModelField):
-        self.model_item = model_item
+        self, base_id=1, fields=[],
+            model_field=Field):
         self.model_field = model_field
-        self.fields = [model_field(field) for field in fields]
         self.fields = fields
         self.base_id = base_id
         self.items = []
 
     def create(self, *args, **kwargs):
         """Item creation in the DB"""
-        item = self.model_item()
+        item = Item()
         item.id = self.base_id
         self.base_id += 1
+        # fill the fields while checking if the entry is the good type.
+        # empty fields are filled with the entry type value (ex: str())
         for field in self.fields:
             index = self.fields.index(field)
             if len(args) > index:
@@ -57,16 +58,21 @@ class ModelTable:
         pass
 
     def delete(self, id):
-        self.items.remove(self.get(id))
+        self.items.remove(self.get(id=id))
 
-    def get(self, id):
-        items_filtered = list(filter(lambda x: x.id == id, self.items))
-        if len(items_filtered) > 0 and len(items_filtered) < 2:
-            return items_filtered[0]
+    def get(self, **kwargs):  # TODO : get it better
+        items_filtered = self.all()
+        for key, value in kwargs.items():
+            if key == "id":
+                items_filtered = list(filter(lambda x: x.id == value, self.items))
+                return items_filtered[0]
+            else:
+                items_filtered = list(filter(lambda x: getattr(x, key) == value, items_filtered))
+            return items_filtered
 
     def __repr__(self):
         attrs_show = ""
-        for attr in self.__dict__:
+        for attr in vars(self):
             if attr != 'items':
                 attrs_show += f"{attr}: {getattr(self, attr)}, "
         attrs_show += f"items: {len(self.items)}"

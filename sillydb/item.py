@@ -1,12 +1,14 @@
 
 
-class ModelItem:
-    def __init__(self, **kwargs):
-        for key, value in kwargs.items():
-            setattr(self, key, value)
+class Item:
+    """An item have system 2 attribute:
+    - id
+    - in_table
+    And its other attributes
+    """
 
     def __repr__(self):
         attrs_show = ""
-        for attr in self.__dict__:
+        for attr in vars(self):
             attrs_show += f"{attr}: {getattr(self, attr)}, "
         return f"<{attrs_show[:-2]}>"

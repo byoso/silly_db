@@ -1,4 +1,4 @@
-from sillydb.item import ModelItem
+from sillydb.item import Item
 from sillydb.table import ModelTable
 
 
@@ -20,7 +20,7 @@ class ModelDB:
 
     def __repr__(self):
         attrs_show = ""
-        for attr in self.__dict__:
+        for attr in vars(self):
             attrs_show += f"{attr}: {getattr(self, attr)}, "
         return f"<SillyDB {attrs_show}>"
 
