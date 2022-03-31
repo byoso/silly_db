@@ -1,18 +1,25 @@
-from sillydb.item import Item
-from sillydb.table import ModelTable
+#! /usr/bin/env python3
+# coding: utf-8
+
+from table import Table
+from connexion import ConnectorSQLITE, ConnectorJSON
 
 
-version = "1.0.0"
-
-
-class ModelDB:
+class DB:
     def __init__(
-        self, model_table=ModelTable, *args
+        self,
+        file='db.json',
+        *args
             ):
-        self.model_table = model_table
         self.tables = []
         for arg in args:
             self.tables.append(arg)
+        if file.split('.')[1] == 'sqlite3':
+            self.do = ConnectorSQLITE(file)
+        elif file.split('.')[1]:
+            self.do = ConnectorJSON(file)
+        else:
+            raise ValueError("File must end by '.sqlite3' or '.json'")
 
     def add_tables(self, tables_list):
         for table in tables_list:
