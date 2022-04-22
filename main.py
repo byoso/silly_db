@@ -83,19 +83,34 @@ class DB:
     def execute(self, command):
         commands = command.strip().split(";")
         for command in commands:
-            self.cursor.execute(command)
+            try:
+                self.cursor.execute(command)
+            except sqlite3.OperationalError as e:
+                print("sqlite3.OperationalError")
+                print(command)
+                print(e)
 
     def migrate(self, file):
         """Execute the migrations from a .sql file"""
         commands = self._read_sql_file(file)
         self.execute(commands)
 
-    def export(self, file=None):
+    def export_all(self, file=None):
         if file is None:
             file = "backup_" + self.file + ".sql"
         with open(file, 'w') as f:
             for line in self.connection.iterdump():
                 f.write(f"{line}\n")
+
+    def export(self, file=None):
+        if file is None:
+            file = "structure_" + self.file + ".sql"
+        self.cursor.execute("SELECT sql FROM sqlite_master;")
+        with open(file, 'w') as f:
+            f.write("BEGIN TRANSACTION;\n")
+            for line in self.cursor.fetchall():
+                f.write(f"{line[0]};\n")
+            f.write("COMMIT;")
 
     def select(self, command):
         self.execute("SELECT " + command)
@@ -116,7 +131,7 @@ class DB:
         return query_set
 
 
-db = DB('my_db.sqlite3', initial_sql="initial.sql")
+db = DB('my_db.sqlite3', initial_sql="structure_my_db.sqlite3.sql")
 query = db.select(
     "* FROM cat JOIN person ON cat.owner_id=person.id WHERE cat.owner_id=1")
 
@@ -136,4 +151,4 @@ print(query2)
 print(query2.objects[0].cat)
 print(query2.objects[1].cat)
 
-db.export('here.sql')
+# db.export()
