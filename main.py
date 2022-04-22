@@ -85,10 +85,17 @@ class DB:
         for command in commands:
             self.cursor.execute(command)
 
-    def migrations(self, file):
+    def migrate(self, file):
         """Execute the migrations from a .sql file"""
         commands = self._read_sql_file(file)
         self.execute(commands)
+
+    def export(self, file=None):
+        if file is None:
+            file = "backup_" + self.file + ".sql"
+        with open(file, 'w') as f:
+            for line in self.connection.iterdump():
+                f.write(f"{line}\n")
 
     def select(self, command):
         self.execute("SELECT " + command)
@@ -116,13 +123,17 @@ query = db.select(
 print(query.json)
 print(query.objects[0].name)
 
-cat = db.select("* from cat where id=2").objects[0]
-print(cat.name)
-print(cat.owner_id)
+cats = db.select(
+    "cat.name as cat, person.name as owner from cat JOIN"
+    " person where cat.id=2")
+print(cats)
 
 
 query2 = db.select(
-    "cat.name as cat, person.name as owner FROM cat JOIN person ON cat.owner_id=person.id WHERE cat.owner_id=1")
+    "cat.name as cat, person.name as owner FROM cat JOIN person ON "
+    "cat.owner_id=person.id WHERE cat.owner_id=1")
 print(query2)
 print(query2.objects[0].cat)
 print(query2.objects[1].cat)
+
+db.export('here.sql')
