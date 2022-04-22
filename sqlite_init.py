@@ -1,0 +1,17 @@
+
+database_init = """
+CREATE TABLE IF NOT EXISTS person (
+    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    name NVARCHAR(80) NOT NULL,
+    age INTEGER
+);
+
+CREATE TABLE IF NOT EXISTS cat
+(
+    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    name NVCHAR(80) NOT NULL,
+    owner_id INTEGER NOT NULL,
+    FOREIGN KEY (owner_id) REFERENCES person (id)
+        ON DELETE CASCADE
+);
+"""

@@ -2,3 +2,4 @@
  sillydb/__pycache__/
 env/
 .env/
+*.sqlite3
