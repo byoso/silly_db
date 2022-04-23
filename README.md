@@ -5,7 +5,9 @@ Done:
 - Selection / SelectionItem
 
 Todo next:
-- jsonify correctly a selection
+- Selection.jsonify()
+- Selection.exists()
+- Selection.add()
 
 
 
@@ -15,7 +17,14 @@ Todo next:
 Some SQL knowledge **is required**, the purpose of Silly DB is not to get rid of SQL (actualy, SQL is the best tool to manage... a SQL database), but to give a few helpers to make life easyer.
 
 The required knowledge and much more is available here :
-https://docs.python.org/3/library/sqlite3.html#
+
+- https://www.sqlite.org/index.html
+- https://docs.python.org/3/library/sqlite3.html#
+
+You should consider using 'DB Browser for SQLite':
+
+- https://sqlitebrowser.org/
+
 No need to be an expert, just understand own to create a DB and use 'SELECT' will be fine (see the examples files to get quickly some bases).
 
 ## examples
