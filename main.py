@@ -7,20 +7,28 @@ db = DB(file='my_db.sqlite3', initial_sql="structure_my_db.sqlite3.sql")
 query = db.select(
     "* FROM cat JOIN person ON cat.owner_id=person.id WHERE cat.owner_id=1")
 
-print(query.json)
-print(query.items[0].name)
 
-cats = db.select(
+cat = db.select(
     "cat.name as cat, person.name as owner from cat JOIN"
     " person where cat.id=2")
-print(cats)
+print(f"cat : {cat}")
+print(f"cat.exists() : {cat.exists()}")
+print(cat)
+print(dict(cat.items[0]))
 
-
-query2 = db.select(
+cats = db.select(
     "cat.name as cat, person.name as owner FROM cat JOIN person ON "
     "cat.owner_id=person.id WHERE cat.owner_id=1")
-print(query2)
-print(query2.items[0].cat)
-print(query2.items[1].cat)
+print(cats.exists())
+print("Jsonified cats:")
+json_cats = cats.jsonify()
+print(f"{json_cats}")
+print(f"owner : {json_cats[0]['owner']}")
 
-# db.export()
+
+cat = db.select("* FROM cat where id=18")
+print(f"cat : {cat}")
+print(f"cat.exists() : {cat.exists()}")
+
+new_selection = cat + cats
+print("new: ", new_selection)

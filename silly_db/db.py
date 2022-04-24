@@ -6,37 +6,47 @@ class Selection:
     def __init__(self, *args):
         self.items = [*args]
 
-    def __str__(self):
+    def __str__(self) -> str:
         display = "<Selection["
         for elem in self.items:
             display += str(elem)+", "
         display += "]>"
         return display
 
-    @property
-    def json(self):
+    def __iter__(self):
+        return iter(self.items)
+
+    def __add__(self, other):
+        array = list(set([*self.items, *other.items]))
+        return Selection(*array)
+
+    def jsonify(self):
+        """returns an array of dicts"""
         array = []
-        for elem in self.items:
-            array.append(elem.json)
+        for item in self.items:
+            array.append(dict(item))
         return array
+
+    def exists(self) -> bool:
+        if len(self.items) > 0:
+            return True
+        return False
 
 
 class SelectionItem:
+    """db.select() will build SelectionItems with some given attributes
+    and create a Selection object, filled with SelectionItems"""
     def __str__(self) -> str:
-        display = "{"
-        attrs = vars(self)
-        for attr in attrs:
-            display += f"{attr}: {getattr(self, attr)}, "
-        display += "}"
-        return display
+        return str(dict(self))
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return str(self)
 
-    @property
-    def json(self):
-        json = str(self)
-        return json
+    def __iter__(self):
+        """dict(SelectionItem) converts the
+        SelectionItem into a dict"""
+        for attr in vars(self):
+            yield attr, getattr(self, attr)
 
 
 class DB:

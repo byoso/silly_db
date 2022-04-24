@@ -1,13 +1,17 @@
+![logo silly db](https://i.goopics.net/60cef4.png)
+
 # Silly DB
 ### *Still a WIP...*
 Done:
 - DB (methods: execute, migrate, export, export_structure, select)
 - Selection / SelectionItem
+- Selection.exists()
+- Selection.jsonify()
+- Selection.\_\_add__()
 
 Todo next:
-- Selection.jsonify()
-- Selection.exists()
-- Selection.add()
+- Selection.order_by()
+- plop
 
 
 
