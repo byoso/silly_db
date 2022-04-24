@@ -7,7 +7,7 @@ CREATE TABLE "cat" (
 	FOREIGN KEY("owner_id") REFERENCES "person"("id") ON DELETE CASCADE
 );
 INSERT INTO "cat" VALUES(1,'Chat',1);
-INSERT INTO "cat" VALUES(2,'boule de neige',1);
+INSERT INTO "cat" VALUES(2,'snow_ball',1);
 CREATE TABLE "person" (
 	"id"	INTEGER NOT NULL,
 	"name"	NVARCHAR(80) NOT NULL,

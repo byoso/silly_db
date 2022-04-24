@@ -6,8 +6,3 @@ from silly_db.db import DB
 
 
 db = DB(file='my_db.sqlite3', initial_sql='initial.sql')
-
-cats = db.select("* FROM cat")
-print(cats)
-
-print(cats.order_by('name'))

@@ -1,18 +1,6 @@
 ![logo silly db](https://i.goopics.net/60cef4.png)
 
 # Silly DB
-### *Still a WIP...*
-Done:
-- DB (methods: execute, migrate, export, export_structure, select)
-- Selection / SelectionItem
-- Selection.exists()
-- Selection.jsonify()
-- Selection.\_\_add__()
-
-Todo next:
-- Selection.order_by()
-- plop
-
 
 
 ## It is ...
@@ -31,13 +19,31 @@ You should consider using 'DB Browser for SQLite':
 
 No need to be an expert, just understand own to create a DB and use 'SELECT' will be fine (see the examples files to get quickly some bases).
 
+## Silly DB gives a hand with:
+
+- DB object (methods: execute, migrate, export, export_structure, select)
+- Selection / SelectionItem
+- Selection.exists()
+- Selection.jsonify()
+- Selection.\_\_add__()
+- Selection.order_by()
+
+and to start with a base:
+- plop
+
+Read the package help:
+
+```
+$ python3 -m silly_db
+```
+
 ## examples
 
 Create a database:
 ```python
 from silly_db.db import DB
 
-db = DB('my_db.sqlite3', initial_sql="initial.sql")
+db = DB(file="my_db.sqlite3", initial_sql="initial.sql")
 ```
 
 Query example:

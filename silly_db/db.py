@@ -32,6 +32,10 @@ class Selection:
             return True
         return False
 
+    def order_by(self, key=None, reverse=False):
+        return sorted(
+            self.items, key=lambda x: getattr(x, key), reverse=reverse)
+
 
 class SelectionItem:
     """db.select() will build SelectionItems with some given attributes
