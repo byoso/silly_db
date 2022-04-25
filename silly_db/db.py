@@ -54,25 +54,13 @@ class SelectionItem:
 
 
 class DB:
-    def __init__(self, file=None, initial_sql=None):
-        if initial_sql is not None:
-            if os.path.exists(os.path.abspath(file)):
-                self.connection = sqlite3.connect(file)
-                self.cursor = self.connection.cursor()
-            else:
-                self.connection = sqlite3.connect(file)
-                self.cursor = self.connection.cursor()
-                commands = self._read_sql_file(initial_sql)
-                self.execute(commands)
-        if initial_sql is None:
-            if os.path.exists(os.path.abspath(file)):
-                self.connection = sqlite3.connect(file)
-                self.cursor = self.connection.cursor()
-            else:
-                self.connection = sqlite3.connect(file)
-                self.cursor = self.connection.cursor()
-                self.execute("CREATE table 'a' (t INT); DROP TABLE 'a';")
+    def __init__(self, file=None):
+        if file is None:
+            raise ValueError(
+                "Missing parameter for DB: file=some_file_name.sqlite3")
         self.file = file
+        self.connection = sqlite3.connect(file)
+        self.cursor = self.connection.cursor()
 
     def _read_sql_file(self, file):
         with open(file, 'r') as sql_file:
@@ -101,8 +89,11 @@ class DB:
                 print(command)
                 print(e)
 
-    def migrate(self, file):
+    def migrate(self, file=None):
         """Execute the migrations from a .sql file"""
+        if file is None:
+            self.execute(
+                "CREATE table 'dfoixzjk' (t INT); DROP TABLE 'dfoixzjk';")
         commands = self._read_sql_file(file)
         self.execute(commands)
 

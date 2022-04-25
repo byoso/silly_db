@@ -14,8 +14,9 @@ options are:
 
 db
 provides:
-- a basic 'main.py' template
-- a basic 'initial.sql' file
+- a basic 'database.py' template
+- a basic 'migrator.py' template
+- a 'migrations' directory containing 2 examples: inital.sql, populate.sql
 
 """
 
@@ -24,8 +25,9 @@ BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 def get_db():
     cwd = os.getcwd()
-    shutil.copy(BASE_DIR+'/main.py', cwd)
-    shutil.copy(BASE_DIR+'/initial.sql', cwd)
+    shutil.copy(BASE_DIR+'/database.py', cwd)
+    shutil.copy(BASE_DIR+'/migrator.py', cwd)
+    shutil.copytree(BASE_DIR+'/migrations', os.path.join(cwd, "migrations"))
     print("files successfully acquired")
 
 

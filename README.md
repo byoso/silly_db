@@ -19,38 +19,63 @@ You should consider using 'DB Browser for SQLite':
 
 No need to be an expert, just understand own to create a DB and use 'SELECT' will be fine (see the examples files to get quickly some bases).
 
+## Fast way to begin
+
+Create a new directory and open a console in there.
+get a basic working structure:
+```
+$ python3 -m silly_db.plop db
+```
+execute the migrator:
+```
+$ ./migrator.py
+```
+Congratulations ! You got a database !
+To understand how it works, open the differents files provided and read the comments, it will be easy to adapt to your own needs.
+
+get more info with:
+```
+$ python3 -m silly_db
+```
+and more about the plop options here:
+```
+$ python3 _n silly_db.plop
+```
+
+
 ## Silly DB gives a hand with:
 
 - DB object (methods: execute, migrate, export, export_structure, select)
 - Selection / SelectionItem
-- Selection.exists()
-- Selection.jsonify()
-- Selection.\_\_add__()
-- Selection.order_by()
+- Selection.exists() -> bool
+- Selection.jsonify() -> list of dict
+- Selection.\_\_add__() (new = selection + selection #without duplications)
+- Selection.order_by(key='a_column_name', reverse=False)
+- SelectionItem are convertible to dict: dico = dict(SelectionItem)
 
-and to start with a base:
+and to start with a basic structure:
 - plop
 
-Read the package help:
+## About queries
+Queries are done just as it is in SQL, but with the DB.select() method. A query returns a Selection object (list of SelectionItem objects).
+Attributes are automaticaly gathered from the query.
 
-```
-$ python3 -m silly_db
-```
-
-## examples
-
-Create a database:
+A Selection object can be converted into a json format.
 ```python
-from silly_db.db import DB
-
-db = DB(file="my_db.sqlite3", initial_sql="initial.sql")
+>>> some_json = selection.jsonify()
 ```
 
-Query example:
+A SelectionItem object can be converted into a dict:
 ```python
->>>selection = db.select(
+>>> dico = dict(selection_item)
+```
+Short example:
+
+```python
+>>> selection = db.select(
     "cat.name as cat, person.name as owner FROM cat JOIN person ON "
-    "cat.owner_id=person.id WHERE cat.owner_id=1")
+    "cat.owner_id=person.id WHERE cat.owner_id=1"
+    )
 >>> print(selection)
 <Selection[{cat: Chat, owner: Irina, }, {cat: snow_ball, owner: Irina, }, ]>
 >>> selection.items[1].cat

@@ -5,4 +5,4 @@
 from silly_db.db import DB
 
 
-db = DB(file='my_db.sqlite3', initial_sql='initial.sql')
+db = DB(file='my_db.sqlite3')

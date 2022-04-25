@@ -6,16 +6,10 @@ CREATE TABLE "cat" (
 	PRIMARY KEY("id" AUTOINCREMENT),
 	FOREIGN KEY("owner_id") REFERENCES "person"("id") ON DELETE CASCADE
 );
-INSERT INTO "cat" VALUES(1,'Chat',1);
-INSERT INTO "cat" VALUES(2,'snow_ball',1);
 CREATE TABLE "person" (
 	"id"	INTEGER NOT NULL,
 	"name"	NVARCHAR(80) NOT NULL,
 	"age"	INTEGER,
 	PRIMARY KEY("id" AUTOINCREMENT)
 );
-INSERT INTO "person" VALUES(1,'Irina',35);
-DELETE FROM "sqlite_sequence";
-INSERT INTO "sqlite_sequence" VALUES('person',1);
-INSERT INTO "sqlite_sequence" VALUES('cat',2);
 COMMIT;
