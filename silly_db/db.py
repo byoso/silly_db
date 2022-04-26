@@ -1,4 +1,3 @@
-import os
 import sqlite3
 
 
@@ -80,14 +79,17 @@ class DB:
         return uniques
 
     def execute(self, command):
+        """'Begin transaction' and 'commit' are automatically added
+        to the command, so don't use this key words."""
         commands = command.strip().split(";")
-        for command in commands:
-            try:
+        try:
+            self.cursor.execute("BEGIN TRANSACTION;")
+            for command in commands:
                 self.cursor.execute(command)
-            except sqlite3.OperationalError as e:
-                print("sqlite3.OperationalError")
-                print(command)
-                print(e)
+            self.cursor.execute("COMMIT;")
+        except sqlite3.OperationalError as e:
+            print("sqlite3.OperationalError :")
+            print(e)
 
     def migrate(self, file=None):
         """Execute the migrations from a .sql file"""
@@ -95,7 +97,13 @@ class DB:
             self.execute(
                 "CREATE table 'dfoixzjk' (t INT); DROP TABLE 'dfoixzjk';")
         commands = self._read_sql_file(file)
-        self.execute(commands)
+        commands = commands.strip().split(";")
+        try:
+            for command in commands:
+                self.cursor.execute(command)
+        except sqlite3.OperationalError as e:
+            print("sqlite3.OperationalError :")
+            print(e)
 
     def export(self, file=None):
         if file is None:
@@ -115,7 +123,7 @@ class DB:
             f.write("COMMIT;")
 
     def select(self, command):
-        self.execute("SELECT " + command)
+        self.cursor.execute("SELECT " + command)
         headers = self._get_headers(self.cursor.description)
         results = self.cursor.fetchall()
         answers = []
