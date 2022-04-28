@@ -1,5 +1,6 @@
 *.pyc
- sillydb/__pycache__/
+__pycache__
 env/
 .env/
 *.sqlite3
+building-package.txt
