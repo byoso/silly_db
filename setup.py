@@ -2,10 +2,15 @@
 # coding: utf-8
 
 """
+This file only belongs to pypi setup, not with silly_db in itself.
+
+REMINDER:
 1- build
 ./setup.py sdist bdist_wheel
 2- basic verifications
 twine check dist/*
+2.5- Deploy on testpypi (optionnal, site here : https://test.pypi.org/):
+twine upload --repository testpypi dist/*
 3- upload to PyPi
 twine upload dist/*
 """
@@ -23,8 +28,8 @@ README = (HERE / "README.md").read_text()
 
 # This call to setup() does all the work
 setup(
-    name="silly_db",
-    version="1.0.0",
+    name="silly-db",
+    version="1.0.3",
     description=(
         "Python3 tool to create and handle very quickly a sqlite3 "
         "database in an application"
@@ -43,12 +48,20 @@ setup(
         "Natural Language :: English",
         "Topic :: Software Development :: Libraries :: Application Frameworks",
     ],
-    packages=["silly_db"],
-    include_package_data=True,
+    packages=[
+        "silly_db",
+        "silly_db.plop",
+        "silly_db.plop.db",
+        "silly_db.plop.db.migrations",
+        ],
+    # include_package_data=True,
+    package_data={'': ['*.sql']},
+    python_requires='>=3.6',
     # install_requires=[],
+    keywords='database sqlite3 db DB',
     entry_points={
         "console_scripts": [
-            "realpython=flamewok.__main__:main",
+            "realpython=silly_db.__main__:main",
         ]
     },
     setup_requires=['wheel'],

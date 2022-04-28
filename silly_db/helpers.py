@@ -1,3 +1,11 @@
+import os
+import stat
+
+
+def set_executable(file) -> None:
+    st = os.stat(file)
+    os.chmod(file, st.st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
+
 
 def text(text: str) -> str:
     """Cleans the string to be insertable into sql.

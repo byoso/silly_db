@@ -1,6 +1,10 @@
 *.pyc
-__pycache__
+__pycache__/
 env/
 .env/
 *.sqlite3
-building-package.txt
+
+build/
+dist/
+.eggs/
+silly_db.egg-info/

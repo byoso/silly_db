@@ -19,14 +19,22 @@ You should consider using 'DB Browser for SQLite':
 
 No need to be an expert, just understand own to create a DB and use 'SELECT' will be fine (see the examples files to get quickly some bases).
 
+## Installation
+
+```
+$ pip install silly-db
+```
+
 ## Fast way to begin
 
 Create a new directory and open a console in there.
-get a basic working structure:
+
+Get a basic working structure:
 ```
 $ python3 -m silly_db.plop db
 ```
-execute the migrator:
+
+Execute the migrator:
 ```
 $ ./migrator.py
 ```
