@@ -1,7 +1,11 @@
 import sqlite3
+from silly_db.helpers import color
 
 
 class Selection:
+    """Object returned by the DB.select method, it contains the result
+    of the query in a convenient form allowing easy manipulations.
+    - self.items is a list of SelectionItems."""
     def __init__(self, *args):
         self.items = [*args]
 
@@ -20,7 +24,7 @@ class Selection:
         return Selection(*array)
 
     def jsonify(self):
-        """returns an array of dicts"""
+        """Returns an array of SelectionItems turned into dicts"""
         array = []
         for item in self.items:
             array.append(dict(item))
@@ -53,22 +57,32 @@ class SelectionItem:
 
 
 class DB:
-    def __init__(self, file=None):
+    """Central object interacting with the database itself.
+    params:
+        - file (required): path to your desired [name].sqlite3 file
+        - debug: default is True, shows or not some warnings.
+    """
+    def __init__(self, file: str = None, debug: bool = True):
         if file is None:
             raise ValueError(
                 "Missing parameter for DB: file=some_file_name.sqlite3")
+        self.debug = debug
         self.file = file
         self.connection = sqlite3.connect(file)
         self.cursor = self.connection.cursor()
 
-    def _read_sql_file(self, file):
+    def _read_sql_file(self, file: str) -> str:
+        """Returns the content of a given file"""
         with open(file, 'r') as sql_file:
             commands = sql_file.read()
         return commands
 
     def _get_headers(self, cursor_description):
+        """Gathers the headers from a query. In case of duplicated headers,
+        renames them, and sends a warning (if self.debug is True)"""
         headers = [description[0] for description in cursor_description]
         uniques = []
+        warning = False  # inform the user if the headers have been changed
         for header in headers:
             counter = 1
             if header not in uniques:
@@ -76,6 +90,16 @@ class DB:
             else:
                 uniques.append(header + f"_{counter}")
                 counter += 1
+                warning = True
+        if warning and self.debug:
+            print(
+                color["warning"] +
+                "\n!!! WARNING : ambiguous query :\n"
+                "Headers with same names, silly_db arbitrarily "
+                "changed some of your headers. Use '[name] as [other_name)]'"
+                " in your SQL query to fix this.\n" +
+                color['end']
+                )
         return uniques
 
     def execute(self, command):
@@ -106,6 +130,8 @@ class DB:
             print(e)
 
     def export(self, file=None):
+        """Exports the entire database to a given file,
+         into a sql format."""
         if file is None:
             file = "backup_" + self.file + ".sql"
         with open(file, 'w') as f:
@@ -113,6 +139,8 @@ class DB:
                 f.write(f"{line}\n")
 
     def export_structure(self, file=None):
+        """Exports only the structure of the database to a given file,
+        into a sql format."""
         if file is None:
             file = "structure_" + self.file + ".sql"
         self.cursor.execute("SELECT sql FROM sqlite_master;")
@@ -122,7 +150,10 @@ class DB:
                 f.write(f"{line[0]};\n")
             f.write("COMMIT;")
 
-    def select(self, command):
+    def select(self, command: str) -> Selection:
+        """Query tool, the parameter is a purely SQL query, but without
+        the word SELECT at the beginig (as it's already the method name)
+        """
         self.cursor.execute("SELECT " + command)
         headers = self._get_headers(self.cursor.description)
         results = self.cursor.fetchall()

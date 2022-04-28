@@ -49,12 +49,19 @@ $ python3 _n silly_db.plop
 - Selection / SelectionItem
 - Selection.exists() -> bool
 - Selection.jsonify() -> list of dict
-- Selection.\_\_add__() (new = selection + selection #without duplications)
+- Selection.\_\_add__() (new = selection1 + selection2 #without duplications)
 - Selection.order_by(key='a_column_name', reverse=False)
 - SelectionItem are convertible to dict: dico = dict(SelectionItem)
 
-and to start with a basic structure:
+to start with a basic structure:
 - plop
+
+fix the sql 'quotes' problem with silly_db.helpers.text:
+```python
+name = text("tim's") # convert ' into '' (escaped quote)
+db.execute(f"INSERT INTO 'guys' ('name') VALUES('{name}')")
+
+```
 
 ## About queries
 Queries are done just as it is in SQL, but with the DB.select() method. A query returns a Selection object (list of SelectionItem objects).
