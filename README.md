@@ -34,7 +34,7 @@ Get a basic working structure:
 $ python3 -m silly_db.plop db
 ```
 
-Execute the migrator:
+Execute the migrator (in the 'database' directory):
 ```
 $ ./migrator.py
 ```

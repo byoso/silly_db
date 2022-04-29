@@ -1,10 +1,9 @@
 #! /usr/bin/env python3
 # coding: utf-8
 
-"""Example of an embryonic main.py file, this should be included in
-a MCV designed program"""
+"""Example of an embryonic main.py file"""
 
-from database.database import db
+from database import db
 from silly_db.helpers import text
 
 

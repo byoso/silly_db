@@ -1,16 +1,15 @@
 import sys
 
 help = """
-Silly db
+Silly DB
 
 more informations here:
 https://github.com/byoso/silly_db/
 
-Get some templates with plop
-To read the plop help use this command line:
+Get some ready to use templates with 'plop'
+Read the plop's help with this command line:
 
 python3 -m silly_db.plop
-
 
 """
 
