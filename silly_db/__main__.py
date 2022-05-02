@@ -1,7 +1,7 @@
 import sys
 
 help = """
-Silly DB
+Silly DB 1.0.6.1
 
 more informations here:
 https://github.com/byoso/silly_db/
