@@ -7,12 +7,17 @@ def set_executable(file) -> None:
     os.chmod(file, st.st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
 
 
-def text(text: str) -> str:
-    """Cleans the string to be insertable into sql.
-    Fixes the quote problem.
+def to_sql(value):
+    """Cleans the data to be insertable into sql.
+    - str: Fixes the quote problem.
+    - None: becomes NULL
+    - other: keep it as it is.
     """
-    output = text.replace("'", "''")
-    return output
+    if isinstance(value, type(None)):
+        sql_value = 'NULL'
+    if type(value) == str:
+        sql_value = value.replace("'", "''")
+    return sql_value
 
 
 # color parameters: style;background (30 is none);foreground

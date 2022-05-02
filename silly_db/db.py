@@ -118,36 +118,66 @@ class DB:
     def migrate(self, file=None):
         """Execute the migrations from a .sql file"""
         if file is None:
-            self.execute(
+            self.connection.executescript(
                 "CREATE table 'dfoixzjk' (t INT); DROP TABLE 'dfoixzjk';")
-        commands = self._read_sql_file(file)
-        commands = commands.strip().split(";")
-        try:
-            for command in commands:
-                self.cursor.execute(command)
-        except sqlite3.OperationalError as e:
-            print("sqlite3.OperationalError :")
-            print(e)
+        else:
+            commands = self._read_sql_file(file)
+            try:
+                self.connection.executescript(commands)
+            except sqlite3.OperationalError as e:
+                print("sqlite3.OperationalError :")
+                print(e)
 
-    def export(self, file=None):
-        """Exports the entire database to a given file,
+    def export(
+        self, structure_file="structure.sql", data_file="data.sql",
+        action="both"  # both / structure / data
+            ):
+        """By default export both data and structure with default file names"""
+        structure = ""
+        data = "BEGIN TRANSACTION;\n"
+        for line in self.connection.iterdump():
+            if "sqlite_sequence" not in line:
+                if line.startswith("INSERT"):
+                    data += line+"\n"
+                else:
+                    structure += line+"\n"
+        data += "COMMIT;"
+        if action == "both" or action == "structure":
+            with open(structure_file, 'w') as f:
+                f.write(structure)
+        if action == "both" or action == "data":
+            with open(data_file, 'w') as f:
+                f.write(data)
+
+    def export_all(self, file=None):
+        """Exports both structure and data to a single file,
          into a sql format."""
         if file is None:
-            file = "backup_" + self.file + ".sql"
+            file = "backup_all_in_one.sql"
         with open(file, 'w') as f:
             for line in self.connection.iterdump():
-                f.write(f"{line}\n")
+                if "sqlite_sequence" not in line:
+                    f.write(f"{line}\n")
+
+    def export_data(self, file=None):
+        """Exports the datas only to a given file,
+         into a sql format."""
+        if file is not None:
+            self.export(data_file=file, action="data")
+        else:
+            self.export(action="data")
 
     def export_structure(self, file=None):
         """Exports only the structure of the database to a given file,
         into a sql format."""
         if file is None:
-            file = "structure_" + self.file + ".sql"
+            file = "structure.sql"
         self.cursor.execute("SELECT sql FROM sqlite_master;")
         with open(file, 'w') as f:
             f.write("BEGIN TRANSACTION;\n")
             for line in self.cursor.fetchall():
-                f.write(f"{line[0]};\n")
+                if "sqlite_sequence" not in line[0]:
+                    f.write(f"{line[0]};\n")
             f.write("COMMIT;")
 
     def select(self, command: str) -> Selection:

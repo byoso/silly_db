@@ -4,7 +4,7 @@
 """Example of an embryonic main.py file"""
 
 from database import db
-from silly_db.helpers import text
+from silly_db.helpers import to_sql
 
 
 # AT FIRST:
@@ -15,10 +15,11 @@ from silly_db.helpers import text
 
 # SOME TIPS :
 
-# If a text that you want to insert in your database may contain quotes,
-# use the helper text():
-name = text("bouton d'or")
-db.execute(f"INSERT INTO cat (name, owner_id) VALUES('{name}', 4);")
+# to_sql cleans the data to be insertable into sql
+name = to_sql("bouton d'or")  # single quote escaped
+owner_id = to_sql(None)  # None becomes 'NULL'
+# BEWARE: quotes around '{name}' but not around {owner_id}
+db.execute(f"INSERT INTO cat (name, owner_id) VALUES('{name}', {owner_id});")
 
 # a Selection is iterable:
 persons = db.select("* from person")

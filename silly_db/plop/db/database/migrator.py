@@ -17,8 +17,11 @@ rebuild your db.
 
 """
 
+import os
 from database import db
 
+migdir = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'migrations')
 
-db.migrate('migrations/initial.sql')
-db.migrate('migrations/populate.sql')
+
+db.migrate(migdir + '/initial.sql')
+db.migrate(migdir + '/populate.sql')
