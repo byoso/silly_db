@@ -15,7 +15,7 @@ def to_sql(value):
     """
     if isinstance(value, type(None)):
         sql_value = 'NULL'
-    if type(value) == str:
+    elif type(value) == str:
         sql_value = value.replace("'", "''")
     else:
         sql_value = value
