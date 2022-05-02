@@ -17,6 +17,8 @@ def to_sql(value):
         sql_value = 'NULL'
     if type(value) == str:
         sql_value = value.replace("'", "''")
+    else:
+        sql_value = value
     return sql_value
 
 

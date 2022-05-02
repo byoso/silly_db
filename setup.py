@@ -29,7 +29,7 @@ README = (HERE / "README.md").read_text()
 # This call to setup() does all the work
 setup(
     name="silly-db",
-    version="1.0.5",
+    version="1.0.6",
     description=(
         "Python3 tool to create and handle very quickly a sqlite3 "
         "database in an application"
