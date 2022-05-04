@@ -1,7 +1,8 @@
 import sys
+import silly_db
 
-help = """
-Silly DB v1.0.6.2
+help = f"""
+Silly DB {silly_db.__version__}
 
 more informations here:
 https://github.com/byoso/silly_db/

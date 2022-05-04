@@ -1,0 +1,13 @@
+# ALWAYS THINKING ABOUT UPDATING THE README.md
+
+
+- some shortcuts for single table requests:
+    db.create(table, fields=None or list, values=list) -> Create a new item directly in the db
+    db.get(table, condition="", fields="*") -> Selection[DbItem...]
+    db.id_get(table, id=None) -> DbItem
+
+
+- DbItem have an attribute db_table, and some shortcuts too:
+    DbItem.set("attribute" or [attributes, ...], value or [values, ...]) -> update in the DB
+    DbItem.get("attribute")
+    DbItem.delete()

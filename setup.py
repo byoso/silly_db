@@ -15,7 +15,7 @@ twine upload --repository testpypi dist/*
 twine upload dist/*
 """
 
-
+from silly_db import __version__
 import pathlib
 from setuptools import setup
 
@@ -29,7 +29,7 @@ README = (HERE / "README.md").read_text()
 # This call to setup() does all the work
 setup(
     name="silly-db",
-    version="1.0.6.2",
+    version=f"{__version__}",
     description=(
         "Python3 tool to create and handle very quickly a sqlite3 "
         "database in an application"
@@ -54,8 +54,6 @@ setup(
         "silly_db.plop.db",
         "silly_db.plop.db.database",
         "silly_db.plop.db.database.migrations",
-        "silly_db.plop.tuto",
-        "silly_db.plop.tuto.migrations",
         ],
     # include_package_data=True,
     package_data={'': ['*.sql']},

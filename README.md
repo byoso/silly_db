@@ -4,14 +4,16 @@
 
 
 ## It is ...
-**Not an ORM**. Silly DB is a tool to quikly handle a sqlite3 database with python3.  DB.select() returns a Selection object, wich is convenient to manipulate.
+**Not an ORM**, even though it may "look and feel like" one in some aspects.
 
-Some SQL knowledge **is required**, the purpose of Silly DB is not to get rid of SQL (actualy, SQL is the best tool to manage... a SQL database), but to give a few helpers to make life easyer.
+- Build the structure of your DB from classic .sql files.
+- Queries return directly usefull python objects like an ORM would do.
+
+Some SQL knowledge **is required**, the purpose of Silly DB is not to get rid of SQL (actualy, SQL is the best tool to manage... a SQL database), but to handle the boring things, and let you focus on your application.
 
 The required knowledge and much more is available here :
 
 - https://www.sqlite.org/index.html
-- https://docs.python.org/3/library/sqlite3.html#
 
 You should consider using 'DB Browser for SQLite':
 
@@ -22,23 +24,19 @@ No need to be an expert, just understand own to create a DB and use 'SELECT' wil
 ## Installation
 
 ```
-$ pip install silly-db
+$ pip install silly_db
 ```
 
 ## Fast way to begin
 
 Create a new directory and open a console in there.
 
-Get a basic working structure:
+Get a basic working structure with 'plop':
 ```
 $ python3 -m silly_db.plop db
 ```
 
-Execute the migrator (in the 'database' directory):
-```
-$ ./migrator.py
-```
-Congratulations ! You got a database !
+Congratulations ! You've got your database ready to work !
 To understand how it works, open the differents files provided and read the comments, it will be easy to adapt to your own needs.
 
 get more info with:
@@ -60,13 +58,14 @@ $ python3 _n silly_db.plop
 - Selection.\_\_add__() (new = selection1 + selection2 #without duplications)
 - Selection.order_by(key='a_column_name', reverse=False)
 - SelectionItem are convertible to dict: dico = dict(SelectionItem)
+- Migrations made easy
 
-to start with a basic structure:
-- plop
+- Quick start with plop
 
-fix the sql 'quotes' problem with silly_db.helpers.text:
+And some more...
+fix the sql 'quotes' problem with silly_db.helpers.to_sql:
 ```python
-name = text("tim's") # convert ' into '' (escaped quote)
+name = to_sql("tim's") # convert ' into '' (escaped quote)
 db.execute(f"INSERT INTO 'guys' ('name') VALUES('{name}')")
 
 ```

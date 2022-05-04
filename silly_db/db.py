@@ -1,5 +1,14 @@
+import os
 import sqlite3
-from silly_db.helpers import color
+from silly_db.helpers import (
+    color,
+    INITIALIZE_DB,
+    hasher,
+    )
+from silly_db.exceptions import (
+    SillyDbError,
+    MIGRATE_ALL_ERROR,
+)
 
 
 class Selection:
@@ -62,14 +71,22 @@ class DB:
         - file (required): path to your desired [name].sqlite3 file
         - debug: default is True, shows or not some warnings.
     """
-    def __init__(self, file: str = None, debug: bool = True):
+    def __init__(
+        self,
+        file: str = None,
+        migrations_dir: str = None,
+        debug: bool = True
+            ):
         if file is None:
-            raise ValueError(
+            raise SillyDbError(
                 "Missing parameter for DB: file=some_file_name.sqlite3")
-        self.debug = debug
         self.file = file
         self.connection = sqlite3.connect(file)
         self.cursor = self.connection.cursor()
+        self.migrations_dir = migrations_dir
+        self.debug = debug
+
+        self.execute(INITIALIZE_DB)
 
     def _read_sql_file(self, file: str) -> str:
         """Returns the content of a given file"""
@@ -116,17 +133,45 @@ class DB:
             print(e)
 
     def migrate(self, file=None):
-        """Execute the migrations from a .sql file"""
-        if file is None:
-            self.connection.executescript(
-                "CREATE table 'dfoixzjk' (t INT); DROP TABLE 'dfoixzjk';")
-        else:
+        """Execute the migrations from a .sql file if the migration
+        have not be done already."""
+        hashes_selection = self.select("sha1 FROM _migrations_applied")
+        hashes = [hash.sha1 for hash in hashes_selection]
+        sha1 = hasher(file)
+        if sha1 not in hashes:
             commands = self._read_sql_file(file)
             try:
                 self.connection.executescript(commands)
+                file_name = os.path.split(file)[-1]
+                register_migration = (
+                    "INSERT INTO '_migrations_applied' (file, sha1) "
+                    f"VALUES('{file_name}', '{sha1}');"
+                )
+                self.execute(register_migration)
+                print(
+                    color["success"] +
+                    f"Migration successfully applied: {file_name}" +
+                    color['end']
+                    )
             except sqlite3.OperationalError as e:
                 print("sqlite3.OperationalError :")
                 print(e)
+
+    def migrate_all(self, directory=None):
+        """migrates all the files in the self.migrations_dir or a given
+        directory"""
+        if directory is not None:
+            apply_dir = directory
+        elif self.migrations_dir is None:
+            raise SillyDbError(MIGRATE_ALL_ERROR)
+        else:
+            apply_dir = self.migrations_dir
+        files = [
+            file for file in os.listdir(apply_dir)
+            if file.lower().endswith(".sql")
+            ]
+        for file in files:
+            self.migrate(os.path.abspath(os.path.join(apply_dir, file)))
 
     def export(
         self, structure_file="structure.sql", data_file="data.sql",

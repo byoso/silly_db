@@ -1,8 +1,22 @@
 import os
 import stat
+import hashlib
+
+
+def hasher(file):
+    """Returns the sha1 hash of a file"""
+    BLOCK_SIZE = 65536
+    hash = hashlib.sha1()
+    with open(file, 'r') as f:
+        fb = f.read(BLOCK_SIZE).encode('utf-8')
+        while len(fb) > 0:
+            hash.update(fb)
+            fb = f.read(BLOCK_SIZE).encode('utf-8')
+    return hash.hexdigest()
 
 
 def set_executable(file) -> None:
+    """set a file executable, used within plop"""
     st = os.stat(file)
     os.chmod(file, st.st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
 
@@ -30,3 +44,15 @@ color = {
     "warning": "\x1b[0;30;33m",
     "danger": "\x1b[0;30;31m",
 }
+
+
+INITIALIZE_DB = """
+CREATE TABLE IF NOT EXISTS "_migrations_applied" (
+    "id" INTEGER NOT NULL,
+    "file" TEXT NOT NULL,
+    "date" TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    "sha1" TEXT NOT NULL,
+	PRIMARY KEY("id" AUTOINCREMENT)
+);
+
+"""

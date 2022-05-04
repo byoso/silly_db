@@ -4,18 +4,16 @@
 """Example of an embryonic main.py file, this should be included in
 a MCV designed program"""
 
-from database.database import db
+from silly_db.db import DB
 from silly_db.helpers import to_sql
 
-
-# AT FIRST:
-# Do not forget to run the migrator.py once, to create the database.
-# Take a look into the migrator.py and database.py, it is very simple
-# to adapt this code to your own needs.
+# Database initialized here
+db = DB(file="database/my_db.sqlite3", migrations_dir="database/migrations")
+# make migrations from the migrations_dir
+db.migrate_all()
 
 
 # SOME TIPS :
-
 # to_sql cleans the data to be insertable into sql
 name = to_sql("bouton d'or")  # single quote escaped
 owner_id = to_sql(None)  # None becomes 'NULL'
