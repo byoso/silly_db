@@ -22,26 +22,27 @@ def set_executable(file) -> None:
     os.chmod(file, st.st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
 
 
-def to_sql(value, safe=False):
+def insert_to_sql(value, safe=True):
     """Cleans the input data to be insertable into sql.
     - str: Fixes the quote problem.
     - None: becomes NULL
     - other: keep it as it is.
     Set safe to True to avoid safety check.
     """
-    danger = ['create', 'alter', 'drop']
+    # danger = ['create', 'alter', 'drop']
 
     if isinstance(value, type(None)):
         sql_value = 'NULL'
     elif type(value) == str:
-        # safety check
-        if not safe:
-            for word in danger:
-                if word in value.lower():
-                    raise SillyDbError(
-                        "SQL injection attempt (CREATE, ALTER OR DROP)"
-                    )
+        # # safety check
+        # if not safe:
+        #     for word in danger:
+        #         if value.lower().startswith():
+        #             raise SillyDbError(
+        #                 "SQL injection attempt (CREATE, ALTER OR DROP)"
+        #             )
         sql_value = value.replace("'", "''")
+        sql_value = f"'{sql_value}'"
     else:
         sql_value = value
     return sql_value

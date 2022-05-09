@@ -1,6 +1,0 @@
-# REMEMBER TO UPDATE THE README.md
-
-- insert into model
-- join
-
-- update the readme (half ORM now), make some doc on wiki, update pypi

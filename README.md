@@ -1,24 +1,24 @@
 ![logo silly db](https://i.goopics.net/60cef4.png)
 
 # Silly DB
+*Quick and easy SQLite database  for local python applications.*
 
+## Is it an ORM ?
+It is indeed a ***reversed*** ORM:
 
-## It is ...
-**Not an ORM**, even though it may "look and feel like" one in some aspects.
+- The structure of the DB is built from classic .sql files.
+- Then the magic occures to get the models **from** the DB itself. Usually, an ORM does the contrary.
 
-- Build the structure of your DB from classic .sql files.
-- Queries return directly usefull python objects like an ORM would do.
-
-Some SQL knowledge **is required**, the purpose of Silly DB is not to get rid of SQL (actualy, SQL is the best tool to manage... a SQL database), but to handle the boring things, and let you focus on your application.
+Some minimum SQL knowledge **is required**, the purpose of Silly DB is not to get rid of SQL (actualy, SQL is the best language to manage... a SQL database), but to handle the a lot of boring things, and let you focus on your application with a minimum amount of code.
 
 The required knowledge and much more is available here :
 
-- https://www.sqlite.org/index.html
+- [SQLite.org](https://www.sqlite.org/index.html)
 
 You should consider using :
 
-- [DB Browser for SQLite] (https://sqlitebrowser.org/)
-- [SQLite Studio] (https://sqlitestudio.pl/)
+- [DB Browser for SQLite](https://sqlitebrowser.org/)
+- [SQLite Studio](https://sqlitestudio.pl/)
 
 No need to be an expert, just understand own to create a DB and use 'SELECT' will be fine (see the examples files to get quickly some bases).
 
@@ -50,50 +50,24 @@ $ python3 _n silly_db.plop
 ```
 
 
-## Silly DB gives a hand with:
+## Examples
 
-- DB object (methods: execute, migrate, export, export_structure, select)
-- Selection / SelectionItem
-- Selection.exists() -> bool
-- Selection.jsonify() -> list of dict
-- Selection.\_\_add__() (new = selection1 + selection2 #without duplications)
-- Selection.order_by(key='a_column_name', reverse=False)
-- SelectionItem are convertible to dict: dico = dict(SelectionItem)
-- Migrations made easy
-
-- Quick start with plop
-
-And some more...
-fix the sql 'quotes' problem with silly_db.helpers.to_sql:
 ```python
-name = to_sql("tim's") # convert ' into '' (escaped quote)
-db.execute(f"INSERT INTO 'guys' ('name') VALUES('{name}')")
+from silly_db.db import DB
+
+db = DB(file="database/my_db.sqlite3", migrations_dir="database/migrations")
+db.migrate_all()
+
+Cat = db.model('cat')
+Person = db.model('person')
+
+Cat.insert(name="Kutty", owner_id=1)
+cats = Cat.filter("name like 'K%'")
+print(cats.jsonify())
+
+>>>[{'id': 58, 'name': 'Kutty', 'owner_id': 1}]
 
 ```
 
-## About queries
-Queries are done just as it is in SQL, but with the DB.select() method. A query returns a Selection object (list of SelectionItem objects).
-Attributes are automaticaly gathered from the query.
-
-A Selection object can be converted into a json format.
-```python
->>> some_json = selection.jsonify()
-```
-
-A SelectionItem object can be converted into a dict:
-```python
->>> dico = dict(selection_item)
-```
-Short example:
-
-```python
->>> selection = db.select(
-    "cat.name as cat, person.name as owner FROM cat JOIN person ON "
-    "cat.owner_id=person.id WHERE cat.owner_id=1"
-    )
->>> print(selection)
-<Selection[{cat: Chat, owner: Irina, }, {cat: snow_ball, owner: Irina, }, ]>
->>> selection.items[1].cat
-'snow_ball'
-
-```
+## Documentation
+Take a look at the [wiki here](https://github.com/byoso/silly_db/wiki#silly-db-wiki)

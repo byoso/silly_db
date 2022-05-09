@@ -20,6 +20,7 @@ from silly_db.selections import (
     Selection,
     SelectionItem,
     Model,
+    VirtualModel,
 )
 
 
@@ -133,6 +134,7 @@ class DB:
             file for file in os.listdir(apply_dir)
             if file.lower().endswith(".sql")
             ]
+        files.sort()
         for file in files:
             self.migrate(os.path.abspath(os.path.join(apply_dir, file)))
 
@@ -193,11 +195,13 @@ class DB:
                     f.write(f"{line[0]};\n")
             f.write("COMMIT;")
 
-    def select(self, command: str) -> Selection:
-        """Query tool, the parameter is a purely SQL query, but without
-        the word SELECT at the beginig (as it's already the method name)
-        """
-        self.cursor.execute("SELECT " + command)
+    def view(self, *args):
+        """returns a VirtualModel object"""
+        return VirtualModel(self, *args)
+
+    def query(self, command: str) -> Selection:
+        """command is a SQL query, returns a Selection object"""
+        self.cursor.execute(command)
         headers = self._get_headers(self.cursor.description)
         results = self.cursor.fetchall()
         answers = []
@@ -208,8 +212,13 @@ class DB:
         for answer in answers:
             dico = dict(answer.items())
             response = SelectionItem(dico)
-            # for key in dico:
-            #     setattr(response, key, dico[key])
             responses.append(response)
         selection = Selection(*responses)
         return selection
+
+    def select(self, command: str) -> Selection:
+        """Query tool, the parameter is a purely SQL query, but without
+        the word SELECT at the beginig (as it's already the method name)
+        """
+        command = "SELECT " + command
+        return self.query(command)
