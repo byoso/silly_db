@@ -56,7 +56,7 @@ setup(
         "silly_db.plop.db.database.migrations",
         ],
     # include_package_data=True,
-    package_data={'': ['*.sql']},
+    package_data={'': ['*.sql', '*.txt']},
     python_requires='>=3.6',
     # install_requires=[],
     keywords='database sqlite3 sqlite db',

@@ -15,9 +15,10 @@ The required knowledge and much more is available here :
 
 - https://www.sqlite.org/index.html
 
-You should consider using 'DB Browser for SQLite':
+You should consider using :
 
-- https://sqlitebrowser.org/
+- [DB Browser for SQLite] (https://sqlitebrowser.org/)
+- [SQLite Studio] (https://sqlitestudio.pl/)
 
 No need to be an expert, just understand own to create a DB and use 'SELECT' will be fine (see the examples files to get quickly some bases).
 

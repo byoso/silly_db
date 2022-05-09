@@ -1,13 +1,6 @@
-# ALWAYS THINKING ABOUT UPDATING THE README.md
+# REMEMBER TO UPDATE THE README.md
 
 
-- some shortcuts for single table requests:
-    db.create(table, fields=None or list, values=list) -> Create a new item directly in the db
-    db.get(table, condition="", fields="*") -> Selection[DbItem...]
-    db.id_get(table, id=None) -> DbItem
+- SelItem : mutable or not ? what is the best ?
 
-
-- DbItem have an attribute db_table, and some shortcuts too:
-    DbItem.set("attribute" or [attributes, ...], value or [values, ...]) -> update in the DB
-    DbItem.get("attribute")
-    DbItem.delete()
+- update the readme (half ORM now), make some doc on wiki, update pypi

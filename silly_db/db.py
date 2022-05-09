@@ -1,3 +1,9 @@
+
+"""This module provides the class DB, main class of silly_db.
+
+"""
+
+
 import os
 import sqlite3
 from silly_db.helpers import (
@@ -10,59 +16,11 @@ from silly_db.exceptions import (
     MIGRATE_ALL_ERROR,
 )
 
-
-class Selection:
-    """Object returned by the DB.select method, it contains the result
-    of the query in a convenient form allowing easy manipulations.
-    - self.items is a list of SelectionItems."""
-    def __init__(self, *args):
-        self.items = [*args]
-
-    def __str__(self) -> str:
-        display = "<Selection["
-        for elem in self.items:
-            display += str(elem)+", "
-        display += "]>"
-        return display
-
-    def __iter__(self):
-        return iter(self.items)
-
-    def __add__(self, other):
-        array = list(set([*self.items, *other.items]))
-        return Selection(*array)
-
-    def jsonify(self):
-        """Returns an array of SelectionItems turned into dicts"""
-        array = []
-        for item in self.items:
-            array.append(dict(item))
-        return array
-
-    def exists(self) -> bool:
-        if len(self.items) > 0:
-            return True
-        return False
-
-    def order_by(self, key=None, reverse=False):
-        return sorted(
-            self.items, key=lambda x: getattr(x, key), reverse=reverse)
-
-
-class SelectionItem:
-    """db.select() will build SelectionItems with some given attributes
-    and create a Selection object, filled with SelectionItems"""
-    def __str__(self) -> str:
-        return str(dict(self))
-
-    def __repr__(self) -> str:
-        return str(self)
-
-    def __iter__(self):
-        """dict(SelectionItem) converts the
-        SelectionItem into a dict"""
-        for attr in vars(self):
-            yield attr, getattr(self, attr)
+from silly_db.selections import (
+    Selection,
+    SelectionItem,
+    Model,
+)
 
 
 class DB:
@@ -118,6 +76,11 @@ class DB:
                 color['end']
                 )
         return uniques
+
+    def model(self, table):
+        """Takes a table name as parameter, returns the table as a Model"""
+        new_model = Model(self, table)
+        return new_model
 
     def execute(self, command):
         """'Begin transaction' and 'commit' are automatically added
