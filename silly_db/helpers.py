@@ -29,18 +29,18 @@ def to_sql(value, safe=False):
     - other: keep it as it is.
     Set safe to True to avoid safety check.
     """
-    # safety check
     danger = ['create', 'alter', 'drop']
-    if not safe:
-        for word in danger:
-            if word in value.lower():
-                raise SillyDbError(
-                    "SQL injection attempt (CREATE, ALTER OR DROP)"
-                )
 
     if isinstance(value, type(None)):
         sql_value = 'NULL'
     elif type(value) == str:
+        # safety check
+        if not safe:
+            for word in danger:
+                if word in value.lower():
+                    raise SillyDbError(
+                        "SQL injection attempt (CREATE, ALTER OR DROP)"
+                    )
         sql_value = value.replace("'", "''")
     else:
         sql_value = value

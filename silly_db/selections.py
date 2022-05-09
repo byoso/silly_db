@@ -54,6 +54,13 @@ class Selection:
 class SelectionItem:
     """db.select() will build SelectionItems with some given attributes
     and create a Selection object, filled with SelectionItems"""
+    def __init__(self, dico=None, **kwargs):
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+        if dico is not None:
+            for key, value in dico.items():
+                setattr(self, key, value)
+
     def __str__(self) -> str:
         return f"<SelItem{str(dict(self))}>"
 
@@ -68,27 +75,36 @@ class SelectionItem:
                 setattr(self, attr, dict(getattr(self, attr)))
             yield attr, getattr(self, attr)
 
+    def _copy(self):
+        new = SelectionItem()
+        for attr in vars(self):
+            setattr(new, attr, getattr(self, attr))
+        return new
+
     def fusion_in(self, attr_name, item, in_place_of=None):
         """Include another item into self as an attribute"""
-        setattr(self, attr_name, item)
+        copy = self._copy()
+        setattr(copy, attr_name, item)
         if in_place_of is not None:
-            self.remove(in_place_of)
-        return self
+            copy.remove(in_place_of)
+        return copy
 
     def fusion_on(self, item, in_place_of=None):
         """Fusion with another item"""
+        copy = self._copy()
         if in_place_of is not None:
-            self.remove(in_place_of)
+            copy.remove(in_place_of)
         attrs = vars(item)
         for attr in attrs:
-            setattr(self, attr, getattr(item, attr))
-        return self
+            setattr(copy, attr, getattr(item, attr))
+        return copy
 
     def remove(self, *args):
         """remove one or more attributes"""
+        copy = self._copy()
         for arg in args:
-            delattr(self, arg)
-        return self
+            delattr(copy, arg)
+        return copy
 
 
 class Model:

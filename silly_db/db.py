@@ -137,14 +137,17 @@ class DB:
             self.migrate(os.path.abspath(os.path.join(apply_dir, file)))
 
     def export(
-        self, structure_file="structure.sql", data_file="data.sql",
+        self,
+        structure_file="00_structure.sql_bkp",
+        data_file="01_data.sql_bkp",
         action="both"  # both / structure / data
             ):
         """By default export both data and structure with default file names"""
         structure = ""
         data = "BEGIN TRANSACTION;\n"
         for line in self.connection.iterdump():
-            if "sqlite_sequence" not in line:
+            if "sqlite_sequence" not in line and \
+                    "_migrations_applied" not in line:
                 if line.startswith("INSERT"):
                     data += line+"\n"
                 else:
@@ -161,10 +164,11 @@ class DB:
         """Exports both structure and data to a single file,
          into a sql format."""
         if file is None:
-            file = "backup_all_in_one.sql"
+            file = "backup_all_in_one.sql_bkp"
         with open(file, 'w') as f:
             for line in self.connection.iterdump():
-                if "sqlite_sequence" not in line:
+                if "sqlite_sequence" not in line and \
+                        "_migrations_applied" not in line:
                     f.write(f"{line}\n")
 
     def export_data(self, file=None):
@@ -179,12 +183,13 @@ class DB:
         """Exports only the structure of the database to a given file,
         into a sql format."""
         if file is None:
-            file = "structure.sql"
+            file = "00_structure.sql_bkp"
         self.cursor.execute("SELECT sql FROM sqlite_master;")
         with open(file, 'w') as f:
             f.write("BEGIN TRANSACTION;\n")
             for line in self.cursor.fetchall():
-                if "sqlite_sequence" not in line[0]:
+                if "sqlite_sequence" not in line[0] and \
+                        "_migrations_applied" not in line[0]:
                     f.write(f"{line[0]};\n")
             f.write("COMMIT;")
 
@@ -202,9 +207,9 @@ class DB:
             answers.append(elem)
         for answer in answers:
             dico = dict(answer.items())
-            response = SelectionItem()
-            for key in dico:
-                setattr(response, key, dico[key])
+            response = SelectionItem(dico)
+            # for key in dico:
+            #     setattr(response, key, dico[key])
             responses.append(response)
-        query_set = Selection(*responses)
-        return query_set
+        selection = Selection(*responses)
+        return selection

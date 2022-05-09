@@ -1,6 +1,6 @@
 # REMEMBER TO UPDATE THE README.md
 
-
-- SelItem : mutable or not ? what is the best ?
+- insert into model
+- join
 
 - update the readme (half ORM now), make some doc on wiki, update pypi

@@ -1,0 +1,11 @@
+Put your migrations in this folder.
+
+Rules:
+- a migration file must have the extention .sql or .sql
+- name the file with a number at the beginnig to controle the order you whant your migrations
+to be applied with DB.migrate_all().
+
+Beware:
+If you modify a migration file after it have been applied, silly_db will
+consider it as a new migration (even if the name remains the same),
+it will then be applied again.
