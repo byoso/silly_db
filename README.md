@@ -20,7 +20,7 @@ You should consider using :
 - [DB Browser for SQLite](https://sqlitebrowser.org/)
 - [SQLite Studio](https://sqlitestudio.pl/)
 
-No need to be an expert, just understand own to create a DB and use 'SELECT' will be fine (see the examples files to get quickly some bases).
+No need to be an expert, just understand own to create a DB and use 'SELECT' will be fine.
 
 ## Installation
 

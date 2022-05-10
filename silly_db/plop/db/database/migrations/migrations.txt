@@ -1,7 +1,7 @@
 Put your migrations in this folder.
 
 Rules:
-- a migration file must have the extention .sql or .sql
+- a migration file must have the extention .sql or .SQL
 - name the file with a number at the beginnig to controle the order you whant your migrations
 to be applied with DB.migrate_all().
 

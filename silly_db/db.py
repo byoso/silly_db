@@ -32,6 +32,7 @@ class DB:
     """
     def __init__(
         self,
+        base=None,
         file: str = None,
         migrations_dir: str = None,
         debug: bool = True
@@ -39,10 +40,10 @@ class DB:
         if file is None:
             raise SillyDbError(
                 "Missing parameter for DB: file=some_file_name.sqlite3")
-        self.file = file
+        self.file = os.path.join(base, file)
         self.connection = sqlite3.connect(file)
         self.cursor = self.connection.cursor()
-        self.migrations_dir = migrations_dir
+        self.migrations_dir = os.path.join(base, migrations_dir)
         self.debug = debug
 
         self.execute(INITIALIZE_DB)
