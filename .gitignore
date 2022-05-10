@@ -3,6 +3,7 @@ __pycache__/
 env/
 .env/
 *.sqlite3
+TODO.txt
 
 build/
 dist/

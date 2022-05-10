@@ -31,8 +31,7 @@ setup(
     name="silly-db",
     version=f"{__version__}",
     description=(
-        "Python3 tool to create and handle very quickly a sqlite3 "
-        "database in an application"
+        "Very light ORM for SQLite, simple and efficient"
         ),
     long_description=README,
     long_description_content_type="text/markdown",
@@ -59,7 +58,7 @@ setup(
     package_data={'': ['*.sql', '*.txt']},
     python_requires='>=3.6',
     # install_requires=[],
-    keywords='database sqlite3 sqlite db',
+    keywords='database sqlite3 sqlite db orm',
     entry_points={
         "console_scripts": [
             "realpython=silly_db.__main__:main",

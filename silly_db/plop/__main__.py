@@ -16,11 +16,10 @@ options are:
 
 
 [db]
-provides the same as tuto but packaged into a directory:
+provides::
 - a 'database' directory containing:
     - a 'migrations' directory containing 2 examples: inital.sql, populate.sql
-- a 'main_example.py' that is showing a few examples and could be a
-    starting point for your project.
+- a 'main_example.py' that could be a starting point for your project.
 """
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))

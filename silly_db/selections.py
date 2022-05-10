@@ -187,7 +187,9 @@ class Model:
 class VirtualModel:
     """
     VirtualModel(db, *args)
-
+    This allows to store a specific jointure (simple or multiple) in a
+    virtual model.
+    Unlike a Model, a VirtualModel is a read-only object.
     - db is automatically provided by db.view(), do not care.
 
     args must be organized like that:

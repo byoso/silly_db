@@ -1,26 +1,15 @@
 ![logo silly db](https://i.goopics.net/60cef4.png)
 
 # Silly DB
-*Quick and easy SQLite database  for local python applications.*
+*Quick and easy SQLite ORM  for local python applications.*
 
-## Is it an ORM ?
+## Is it really an ORM ?
 It is indeed a ***reversed*** ORM:
 
 - The structure of the DB is built from classic .sql files.
 - Then the magic occures to get the models **from** the DB itself. Usually, an ORM does the contrary.
 
-Some minimum SQL knowledge **is required**, the purpose of Silly DB is not to get rid of SQL (actualy, SQL is the best language to manage... a SQL database), but to handle the a lot of boring things, and let you focus on your application with a minimum amount of code.
-
-The required knowledge and much more is available here :
-
-- [SQLite.org](https://www.sqlite.org/index.html)
-
-You should consider using :
-
-- [DB Browser for SQLite](https://sqlitebrowser.org/)
-- [SQLite Studio](https://sqlitestudio.pl/)
-
-No need to be an expert, just understand own to create a DB and use 'SELECT' will be fine.
+Some minimum SQL knowledge **is required**, the purpose of Silly DB is not to get rid of SQL (actualy, SQL is the best language to manage... a SQL database), but to handle the annoying things, and let you focus on your application with a minimum amount of code.
 
 ## Installation
 
@@ -46,26 +35,30 @@ $ python3 -m silly_db
 ```
 and more about the plop options here:
 ```
-$ python3 _n silly_db.plop
+$ python3 -m silly_db.plop
 ```
 
-
-## Examples
+## Examples (simple CRUD)
 
 ```python
-from silly_db.db import DB
 
-db = DB(file="database/my_db.sqlite3", migrations_dir="database/migrations")
-db.migrate_all()
-
-Cat = db.model('cat')
-Person = db.model('person')
+Cat = db.model('cat') # model created from the existing database
 
 Cat.insert(name="Kutty", owner_id=1)
 cats = Cat.filter("name like 'K%'")
 print(cats.jsonify())
 
 >>>[{'id': 58, 'name': 'Kutty', 'owner_id': 1}]
+
+Cat.update("id=58", name="Duke")
+cat = cat.get("id=58")
+print(cat.name)
+>>> 'Duke'
+
+print(cat.jsonify())
+>>>{'id': 58, 'name': 'Duke', 'owner_id': 1}
+
+cat.delete("id=58")
 
 ```
 

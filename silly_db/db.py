@@ -27,8 +27,12 @@ from silly_db.selections import (
 class DB:
     """Central object interacting with the database itself.
     params:
+        - base: the absolute path on wich 'file' and 'migrations_dir' are
+        relatives to.
         - file (required): path to your desired [name].sqlite3 file
-        - debug: default is True, shows or not some warnings.
+        - migrations_dir: path to the directory containing the migrations
+        - debug: default is 'True', shows some warnings in console.
+         'False' will hide the warnings.
     """
     def __init__(
         self,
@@ -133,7 +137,7 @@ class DB:
             apply_dir = self.migrations_dir
         files = [
             file for file in os.listdir(apply_dir)
-            if file.lower().endswith(".sql")
+            if file.endswith(".sql")
             ]
         files.sort()
         for file in files:
