@@ -41,7 +41,7 @@ class DB:
             raise SillyDbError(
                 "Missing parameter for DB: file=some_file_name.sqlite3")
         self.file = os.path.join(base, file)
-        self.connection = sqlite3.connect(file)
+        self.connection = sqlite3.connect(self.file)
         self.cursor = self.connection.cursor()
         self.migrations_dir = os.path.join(base, migrations_dir)
         self.debug = debug
