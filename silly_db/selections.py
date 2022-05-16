@@ -72,9 +72,13 @@ class SelectionItem:
         """dict(SelectionItem) converts the
         SelectionItem into a dict recursively"""
         for attr in vars(self):
-            if isinstance(getattr(self, attr), SelectionItem):
-                setattr(self, attr, dict(getattr(self, attr)))
-            yield attr, getattr(self, attr)
+            object = getattr(self, attr)
+            if isinstance(object, SelectionItem):
+                object = dict(object)
+            if isinstance(object, Selection):
+                object = object.jsonify()
+                # object = f"<Selection{object.jsonify()}>"
+            yield attr, object
 
     def _copy(self):
         new = SelectionItem()
@@ -147,6 +151,8 @@ class Model:
 
     def get_id(self, id, columns="*"):
         """Shortcut to self.get("id=...")"""
+        if id is None:
+            return None
         return self.get(f"id={id}", columns)
 
     def insert(self, **kwargs):
@@ -182,114 +188,3 @@ class Model:
         values = values[:-2]
         command += values + " WHERE " + condition
         self._db.execute(command)
-
-
-class VirtualModel:
-    """
-    VirtualModel(db, *args)
-    This allows to store a specific jointure (simple or multiple) in a
-    virtual model.
-    Unlike a Model, a VirtualModel is a read-only object.
-    - db is automatically provided by db.view(), do not care.
-
-    args must be organized like that:
-    - <tuple>, <jointure(str)>, <tuple>...
-    - tuple: ( table(str), columns(str) )
-        if columns is "*", all the colums will be present, but renamed
-        into : "table" + "_" + "column_name"
-    - jointure: corresponds to the 'ON' key word in SQL.
-        ex: "cat.owner_id=person.id"
-    """
-    def __init__(self, db, *args):
-        if (len(args) - 1) % 2 != 0:
-            raise SillyDbError("Unexpected args number in VirtualView")
-        self._db = db
-        self.tables = []
-        self.db_params = {}
-        self.jointures = []
-        for arg in args:
-            if args.index(arg) % 2 == 0:
-                self._tuple_treatment(arg)
-            else:
-                self.jointures.append(arg)
-        # print(self.db_params)
-        # print(self.jointures)
-
-    def _tuple_treatment(self, arg):
-        """Sort the given args into self.db_params and self.jointures"""
-        table = arg[0]
-        self.tables.append(table)
-        if "*" in arg[1]:
-            reals = self._db.query(f"PRAGMA table_info ({table});")
-            for real in reals:
-                name = table + "_" + real.name
-                self.db_params[name] = (table, real.name)
-        else:
-            columns = arg[1].split(",")
-            for column in columns:
-                if "as" not in column.lower():
-                    self.db_params[column] = (table, column.strip())
-                else:
-                    array = column.lower().split("as")
-                    real = array[0]
-                    alias = array[1]
-                    if alias in self.db_params:
-                        raise SillyDbError(
-                            "Columns name duplication in VirtualModel, use"
-                            "aliases to fix this"
-                            )
-                    self.db_params[alias] = (table, real)
-
-    def _get_columns(self, columns):
-        """return the composed part of the command
-        'column AS alias, ...'"""
-        tables_to_get = ""
-        columns_to_get = ""
-        if columns != "*":
-            columns = columns.split(",")
-            for column in columns:
-                column.strip()
-                columns_to_get += (
-                    self.db_params[column][0] +
-                    "."+self.db_params[column][1] +
-                    " AS " + column + ", "
-                )
-                tables_to_get += self.db_params[column][0]
-        else:
-            for column in self.db_params:
-                columns_to_get += (
-                    self.db_params[column][0] +
-                    "."+self.db_params[column][1] +
-                    " AS " + column + ", "
-                )
-                tables_to_get += self.db_params[column][0]
-        return columns_to_get[:-2]
-
-    def _get_tables_joins(self):
-        """return the composed part of the command
-        'table JOIN table ON <condition>"""
-        joins = self.tables[0]
-        for join in self.jointures:
-            index = self.jointures.index(join)
-            joins += " JOIN " + self.tables[index+1]
-            joins += " ON " + join
-
-        return joins
-
-    def all(self):
-        """VirtualModel does not support aliases in queries, you have to
-        define it when the VirtualModel is created if you whant some."""
-        command = "SELECT "
-        columns = self._get_columns("*")
-        command += columns + " FROM " + self._get_tables_joins()
-        selection = self._db.query(command)
-        return selection
-
-    def filter(self, condition):
-        """returns a Selection"""
-        command = "SELECT "
-        columns = self._get_columns("*")
-        command += columns + " FROM " + self._get_tables_joins()
-        command += " WHERE " + condition
-        selection = self._db.query(command)
-        return selection

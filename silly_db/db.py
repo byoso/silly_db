@@ -20,7 +20,6 @@ from silly_db.selections import (
     Selection,
     SelectionItem,
     Model,
-    VirtualModel,
 )
 
 
@@ -117,11 +116,12 @@ class DB:
                     f"VALUES('{file_name}', '{sha1}');"
                 )
                 self.execute(register_migration)
-                print(
-                    color["success"] +
-                    f"Migration successfully applied: {file_name}" +
-                    color['end']
-                    )
+                if self.debug:
+                    print(
+                        color["success"] +
+                        f"Migration successfully applied: {file_name}" +
+                        color['end']
+                        )
             except sqlite3.OperationalError as e:
                 print("sqlite3.OperationalError :")
                 print(e)
@@ -199,10 +199,6 @@ class DB:
                         "_migrations_applied" not in line[0]:
                     f.write(f"{line[0]};\n")
             f.write("COMMIT;")
-
-    def view(self, *args):
-        """returns a VirtualModel object"""
-        return VirtualModel(self, *args)
 
     def query(self, command: str) -> Selection:
         """command is a SQL query, returns a Selection object"""
