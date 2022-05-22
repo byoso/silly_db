@@ -3,6 +3,8 @@ __pycache__/
 env/
 .env/
 *.sqlite3
+database/
+main_example.py
 TODO.txt
 
 build/

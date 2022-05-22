@@ -32,7 +32,10 @@ class Selection:
         return iter(self.items)
 
     def __add__(self, other):
-        array = list(set([*self.items, *other.items]))
+        if isinstance(other, SelectionItem):
+            self.items.append(other)
+            return self
+        array = [*self, *other]
         return Selection(*array)
 
     def jsonify(self) -> list:
@@ -77,8 +80,11 @@ class SelectionItem:
                 object = dict(object)
             if isinstance(object, Selection):
                 object = object.jsonify()
-                # object = f"<Selection{object.jsonify()}>"
             yield attr, object
+
+    def __add__(self, other):
+        selection = Selection() + self + other
+        return selection
 
     def _copy(self):
         new = SelectionItem()
