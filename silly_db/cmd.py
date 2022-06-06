@@ -58,7 +58,7 @@ def cmd():
         "ABOUT:",
         "package: silly-db",
         f"version: {__version__}",
-        "description: minimalist and efficent ORM working with sqlite3",
+        "description: Very light ORM for SQLite, simple and efficient",
         "home page: https://github.com/byoso/silly_db/",
     )
 
