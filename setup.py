@@ -57,11 +57,13 @@ setup(
     # include_package_data=True,
     package_data={'': ['*.sql', '*.txt']},
     python_requires='>=3.6',
-    # install_requires=[],
+    install_requires=[
+        "flamewok >= 1.0.7",
+    ],
     keywords='database sqlite3 sqlite db orm',
     entry_points={
         "console_scripts": [
-            "realpython=silly_db.__main__:main",
+            "silly-db=silly_db.cmd:cmd",
         ]
     },
     setup_requires=['wheel'],

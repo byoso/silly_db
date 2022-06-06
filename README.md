@@ -14,7 +14,7 @@ Some minimum SQL knowledge **is required**, the purpose of Silly DB is not to ge
 ## Installation
 
 ```
-$ pip install silly_db
+$ pip install silly-db
 ```
 
 ## Fast way to begin
@@ -23,7 +23,7 @@ Create a new directory and open a console in there.
 
 Get a basic working structure with 'plop':
 ```
-$ python3 -m silly_db.plop db
+$ silly-db plop db
 ```
 
 Congratulations ! You've got your database ready to work !
@@ -31,11 +31,11 @@ To understand how it works, open the differents files provided and read the comm
 
 get more info with:
 ```
-$ python3 -m silly_db
+$ silly-db -h
 ```
 and more about the plop options here:
 ```
-$ python3 -m silly_db.plop
+$ silly-db plop
 ```
 
 ## Examples (simple CRUD)
