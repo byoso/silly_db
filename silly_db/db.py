@@ -46,10 +46,7 @@ class DB:
         self.file = os.path.join(base, file)
         self.connection = sqlite3.connect(self.file)
         self.cursor = self.connection.cursor()
-        if migrations_dir is None:
-            self.migrations_dir = None
-        else:
-            self.migrations_dir = os.path.join(base, migrations_dir)
+        self.migrations_dir = os.path.join(base, migrations_dir)
         self.debug = debug
 
         self.execute(INITIALIZE_DB)
@@ -134,10 +131,10 @@ class DB:
         directory"""
         if directory is not None:
             apply_dir = directory
-        elif self.migrations_dir is None:
-            return
-        else:
+        elif self.migrations_dir is not None:
             apply_dir = self.migrations_dir
+        else:
+            print("Unable to migrate: No migration directory has been given")
         files = [
             file for file in os.listdir(apply_dir)
             if file.endswith(".sql")
