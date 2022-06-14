@@ -46,7 +46,10 @@ class DB:
         self.file = os.path.join(base, file)
         self.connection = sqlite3.connect(self.file)
         self.cursor = self.connection.cursor()
-        self.migrations_dir = os.path.join(base, migrations_dir)
+        if migrations_dir is None:
+            self.migrations_dir = None
+        else:
+            self.migrations_dir = os.path.join(base, migrations_dir)
         self.debug = debug
 
         self.execute(INITIALIZE_DB)
