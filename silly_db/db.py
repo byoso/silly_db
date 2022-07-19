@@ -13,7 +13,6 @@ from silly_db.helpers import (
     )
 from silly_db.exceptions import (
     SillyDbError,
-    MIGRATE_ALL_ERROR,
 )
 
 from silly_db.selections import (
@@ -94,14 +93,11 @@ class DB:
         """'Begin transaction' and 'commit' are automatically added
         to the command, so don't use this key words."""
         commands = command.strip().split(";")
-        try:
-            self.cursor.execute("BEGIN TRANSACTION;")
-            for command in commands:
-                self.cursor.execute(command)
-            self.cursor.execute("COMMIT;")
-        except sqlite3.OperationalError as e:
-            print("sqlite3.OperationalError :")
-            print(e)
+        # execution
+        self.cursor.execute("BEGIN TRANSACTION;")
+        for command in commands:
+            self.cursor.execute(command)
+        self.cursor.execute("COMMIT;")
 
     def migrate(self, file=None):
         """Execute the migrations from a .sql file if the migration
@@ -111,23 +107,20 @@ class DB:
         sha1 = hasher(file)
         if sha1 not in hashes:
             commands = self._read_sql_file(file)
-            try:
-                self.connection.executescript(commands)
-                file_name = os.path.split(file)[-1]
-                register_migration = (
-                    "INSERT INTO '_migrations_applied' (file, sha1) "
-                    f"VALUES('{file_name}', '{sha1}');"
-                )
-                self.execute(register_migration)
-                if self.debug:
-                    print(
-                        color["success"] +
-                        f"Migration successfully applied: {file_name}" +
-                        color['end']
-                        )
-            except sqlite3.OperationalError as e:
-                print("sqlite3.OperationalError :")
-                print(e)
+
+            self.connection.executescript(commands)
+            file_name = os.path.split(file)[-1]
+            register_migration = (
+                "INSERT INTO '_migrations_applied' (file, sha1) "
+                f"VALUES('{file_name}', '{sha1}');"
+            )
+            self.execute(register_migration)
+            if self.debug:
+                print(
+                    color["success"] +
+                    f"Migration successfully applied: {file_name}" +
+                    color['end']
+                    )
 
     def migrate_all(self, directory=None):
         """migrates all the files in the self.migrations_dir or a given
@@ -152,7 +145,8 @@ class DB:
         data_file="01_data.sql_bkp",
         action="both"  # both / structure / data
             ):
-        """By default export both data and structure with default file names"""
+        """By default exports both data and structure
+        with default file names"""
         structure = ""
         data = "BEGIN TRANSACTION;\n"
         for line in self.connection.iterdump():

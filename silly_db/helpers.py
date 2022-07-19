@@ -1,7 +1,6 @@
 import os
 import stat
 import hashlib
-from silly_db.exceptions import SillyDbError
 
 
 def hasher(file):
@@ -22,26 +21,18 @@ def set_executable(file) -> None:
     os.chmod(file, st.st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
 
 
-def insert_to_sql(value, safe=True):
+def insert_to_sql(value):
     """Cleans the input data to be insertable into sql.
     - str: Fixes the quote problem.
     - None: becomes NULL
     - other: keep it as it is.
-    Set safe to True to avoid safety check.
     """
-    # danger = ['create', 'alter', 'drop']
 
     if isinstance(value, type(None)):
         sql_value = 'NULL'
     elif type(value) == str:
-        # # safety check
-        # if not safe:
-        #     for word in danger:
-        #         if value.lower().startswith():
-        #             raise SillyDbError(
-        #                 "SQL injection attempt (CREATE, ALTER OR DROP)"
-        #             )
-        sql_value = value.replace("'", "''")
+        sql_value = value.replace(
+                    "'", "''")
         sql_value = f"'{sql_value}'"
     else:
         sql_value = value
@@ -64,7 +55,7 @@ CREATE TABLE IF NOT EXISTS "_migrations_applied" (
     "file" TEXT NOT NULL,
     "date" TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     "sha1" TEXT NOT NULL,
-	PRIMARY KEY("id" AUTOINCREMENT)
+    PRIMARY KEY("id" AUTOINCREMENT)
 );
 
 """

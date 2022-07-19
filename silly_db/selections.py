@@ -179,7 +179,10 @@ class Model:
         command = (
             f"INSERT OR REPLACE INTO {self._table} ({keys}) VALUES ({values})"
             )
-        self._db.execute(command)
+
+        self._db.cursor.execute("BEGIN TRANSACTION;")
+        self._db.cursor.execute(command)
+        self._db.cursor.execute("COMMIT;")
 
     def delete(self, condition=None):
         if condition is not None:
