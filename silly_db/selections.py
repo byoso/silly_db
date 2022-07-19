@@ -187,7 +187,9 @@ class Model:
     def delete(self, condition=None):
         if condition is not None:
             command = f"DELETE FROM {self._table} WHERE {condition}"
-            self._db.execute(command)
+            self._db.cursor.execute("BEGIN TRANSACTION;")
+            self._db.cursor.execute(command)
+            self._db.cursor.execute("COMMIT;")
 
     def update(self, condition=None, **kwargs):
         command = f"UPDATE {self._table} SET "
@@ -196,4 +198,6 @@ class Model:
             values += f"{key}={insert_to_sql(kwargs[key])}, "
         values = values[:-2]
         command += values + " WHERE " + condition
-        self._db.execute(command)
+        self._db.cursor.execute("BEGIN TRANSACTION;")
+        self._db.cursor.execute(command)
+        self._db.cursor.execute("COMMIT;")
