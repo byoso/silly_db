@@ -58,7 +58,7 @@ print(cat.name)
 print(cat.jsonify())
 >>>{'id': 58, 'name': 'Duke', 'owner_id': 1}
 
-cat.delete("id=58")
+Cat.delete("id=58")
 
 ```
 
