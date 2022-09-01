@@ -92,24 +92,6 @@ class SelectionItem:
             setattr(new, attr, getattr(self, attr))
         return new
 
-    def fusion_in(self, attr_name, item, in_place_of=None):
-        """Include another item into self as an attribute"""
-        copy = self._copy()
-        setattr(copy, attr_name, item)
-        if in_place_of is not None:
-            copy.remove(in_place_of)
-        return copy
-
-    def fusion_on(self, item, in_place_of=None):
-        """Fusion with another item"""
-        copy = self._copy()
-        if in_place_of is not None:
-            copy.remove(in_place_of)
-        attrs = vars(item)
-        for attr in attrs:
-            setattr(copy, attr, getattr(item, attr))
-        return copy
-
     def remove(self, *args):
         """remove one or more attributes"""
         for arg in args:
