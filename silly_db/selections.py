@@ -50,9 +50,14 @@ class Selection:
             return True
         return False
 
-    def order_by(self, key=None, reverse=False):
-        return Selection(*sorted(
-            self.items, key=lambda x: getattr(x, key), reverse=reverse))
+    def order_by(self, key=None, reverse=False, case=False):
+        if case:
+            return Selection(*sorted(
+                self.items, key=lambda x: getattr(x, key), reverse=reverse))
+        else:
+            return Selection(*sorted(
+                self.items, key=lambda x: getattr(
+                    x, key).upper(), reverse=reverse))
 
 
 class SelectionItem:
