@@ -47,9 +47,7 @@ def get_db(*args):
 def cmd():
     cli.route(
         "HELP :",
-        ("", cli.help, "display this help"),
-        ("-h", cli.help, "idem"),
-        ("--help", cli.help, "idem"),
+        (["", "-h", "--help"], cli.help, "display this help"),
         "PLOP :",
         ("plop", display_plop_help, "About plop"),
         ("plop db", get_db,

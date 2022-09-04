@@ -42,7 +42,7 @@ class Selection:
         """Returns an array of SelectionItems turned into dicts"""
         array = []
         for item in self.items:
-            array.append(dict(item))
+            array.append(item.jsonify())
         return array
 
     def exists(self) -> bool:
@@ -58,6 +58,9 @@ class Selection:
             return Selection(*sorted(
                 self.items, key=lambda x: getattr(
                     x, key).upper(), reverse=reverse))
+
+    def filter(self, func):
+        return Selection(*filter(func, self.items))
 
 
 class SelectionItem:

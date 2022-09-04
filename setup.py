@@ -58,7 +58,7 @@ setup(
     package_data={'': ['*.sql', '*.txt']},
     python_requires='>=3.6',
     install_requires=[
-        "flamewok >= 1.0.7",
+        "flamewok >= 1.1.0",
     ],
     keywords='database sqlite3 sqlite db orm',
     entry_points={
