@@ -18,7 +18,9 @@ from silly_db.exceptions import (
 from silly_db.selections import (
     Selection,
     SelectionItem,
-    Model,
+)
+from silly_db.models import (
+    SillyModel,
 )
 
 
@@ -84,11 +86,6 @@ class DB:
                 )
         return uniques
 
-    def model(self, table):
-        """Takes a table name as parameter, returns the table as a Model"""
-        new_model = Model(self, table)
-        return new_model
-
     def execute(self, command):
         """'Begin transaction' and 'commit' are automatically added
         to the command, so don't use this key words."""
@@ -138,6 +135,11 @@ class DB:
         files.sort()
         for file in files:
             self.migrate(os.path.abspath(os.path.join(apply_dir, file)))
+
+    def model(self, table):
+        """Takes a table name as parameter, returns the table as a Model"""
+        new_model = SillyModel(self, table)
+        return new_model
 
     def export(
         self,

@@ -49,6 +49,7 @@ setup(
     ],
     packages=[
         "silly_db",
+        "silly_db.models",
         "silly_db.plop",
         "silly_db.plop.db",
         "silly_db.plop.db.database",
