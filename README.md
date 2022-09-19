@@ -44,21 +44,21 @@ $ silly-db plop
 
 Cat = db.model('cat') # model created from the existing database
 
-Cat.insert(name="Kutty", owner_id=1)
-cats = Cat.filter("name like 'K%'")
+Cat.sil.insert(name="Kutty", owner_id=1)
+cats = Cat.sil.filter("name like 'K%'")
 print(cats.jsonify())
 
 >>>[{'id': 58, 'name': 'Kutty', 'owner_id': 1}]
 
-Cat.update("id=58", name="Duke")
-cat = cat.get("id=58")
+Cat.sil.update("id=58", name="Duke")
+cat = Cat.sil.get("id=58")
 print(cat.name)
 >>> 'Duke'
 
 print(cat.jsonify())
 >>>{'id': 58, 'name': 'Duke', 'owner_id': 1}
 
-Cat.delete("id=58")
+Cat.sil.delete("id=58")
 
 ```
 
