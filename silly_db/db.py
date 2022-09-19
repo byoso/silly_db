@@ -44,11 +44,16 @@ class DB:
         if file is None:
             raise SillyDbError(
                 "Missing parameter for DB: file=some_file_name.sqlite3")
-        self.file = os.path.join(base, file)
+        elif file.startswith("/") or file.startswith("~"):
+            self.file = os.path.expanduser(file)
+        else:
+            self.file = os.path.join(base, file)
         self.connection = sqlite3.connect(self.file)
         self.cursor = self.connection.cursor()
         if migrations_dir is None:
             self.migrations_dir = None
+        elif migrations_dir.startswith("/") or migrations_dir.startswith("~"):
+            self.migrations_dir = os.path.expanduser(migrations_dir)
         else:
             self.migrations_dir = os.path.join(base, migrations_dir)
         self.debug = debug
