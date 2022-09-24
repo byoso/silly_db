@@ -4,6 +4,8 @@
 - Model
 """
 
+import json
+
 
 class Selection:
     """Object returned by the DB.select method, it contains the result
@@ -39,8 +41,11 @@ class Selection:
         """Returns an array of SelectionItems turned into dicts"""
         array = []
         for item in self.items:
-            array.append(item.jsonify())
-        return array
+            if isinstance(item, SelectionItem):
+                array.append(dict(item))
+            else:
+                array.append(item.jsonify())
+        return json.dumps(array)
 
     def exists(self) -> bool:
         if len(self.items) > 0:
@@ -104,4 +109,4 @@ class SelectionItem:
         return self
 
     def jsonify(self) -> dict:
-        return dict(self)
+        return json.dumps(dict(self))
